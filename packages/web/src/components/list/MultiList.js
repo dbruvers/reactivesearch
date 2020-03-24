@@ -354,7 +354,7 @@ class MultiList extends Component {
 
 		const performUpdate = () => {
 			const handleUpdates = () => {
-				this.updateQuery(finalValues, props);
+				this.updateQuery(finalValues, props, false);
 				if (props.onValueChange) props.onValueChange(finalValues);
 			};
 
@@ -373,7 +373,7 @@ class MultiList extends Component {
 		checkValueChange(props.componentId, finalValues, props.beforeValueChange, performUpdate);
 	};
 
-	updateQuery = (value, props) => {
+	updateQuery = (value, props, updateOptions = true) => {
 		const { customQuery } = props;
 		let query = MultiList.defaultQuery(value, props);
 		let customQueryOptions;
@@ -382,10 +382,12 @@ class MultiList extends Component {
 			customQueryOptions = getOptionsFromQuery(customQuery(value, props));
 			updateCustomQuery(props.componentId, props, value);
 		}
-		props.setQueryOptions(props.componentId, {
-			...MultiList.generateQueryOptions(props, this.state.prevAfter),
-			...customQueryOptions,
-		});
+		if (updateOptions) {
+			props.setQueryOptions(props.componentId, {
+				...MultiList.generateQueryOptions(props, this.state.prevAfter),
+				...customQueryOptions,
+			});
+		}
 
 		props.updateQuery({
 			componentId: props.componentId,
